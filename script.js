@@ -4,6 +4,24 @@ document.addEventListener('DOMContentLoaded', function() {
     const pageLoader = document.querySelector('.page-loader');
     pageLoader.classList.add('hidden');
 
+    // Privacy Policy and Terms of Service links
+    const privacyLink = document.getElementById('privacy-link');
+    const termsLink = document.getElementById('terms-link');
+
+    if (privacyLink) {
+        privacyLink.addEventListener('click', function(e) {
+            e.preventDefault();
+            alert('Privacy Policy: This website does not collect personal information. For more details, please contact the site owner.');
+        });
+    }
+
+    if (termsLink) {
+        termsLink.addEventListener('click', function(e) {
+            e.preventDefault();
+            alert('Terms of Service: By using this website, you agree to use it for lawful purposes only. The site owner is not liable for any issues arising from its use.');
+        });
+    }
+
     // Scroll Progress Indicator
     const progressBar = document.querySelector('.scroll-progress-bar');
     const backToTopButton = document.querySelector('.back-to-top');
