@@ -1,5 +1,34 @@
 // JavaScript for portfolio site
 document.addEventListener('DOMContentLoaded', function() {
+    // Hide page loader
+    const pageLoader = document.querySelector('.page-loader');
+    pageLoader.classList.add('hidden');
+
+    // Scroll Progress Indicator
+    const progressBar = document.querySelector('.scroll-progress-bar');
+    const backToTopButton = document.querySelector('.back-to-top');
+
+    window.addEventListener('scroll', () => {
+        const windowScroll = document.body.scrollTop || document.documentElement.scrollTop;
+        const windowHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+        const scrolled = (windowScroll / windowHeight) * 100;
+        progressBar.style.width = scrolled + '%';
+
+        // Show/hide back to top button
+        if (windowScroll > 300) {
+            backToTopButton.classList.add('show');
+        } else {
+            backToTopButton.classList.remove('show');
+        }
+    });
+
+    // Back to top button click
+    backToTopButton.addEventListener('click', () => {
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+        });
+    });
     // Set current year in footer
     document.getElementById('year').textContent = new Date().getFullYear();
 
