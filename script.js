@@ -8,10 +8,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const privacyLink = document.getElementById('privacy-link');
     const termsLink = document.getElementById('terms-link');
 
-    );
-
-
-
     if (privacyLink) {
         privacyLink.addEventListener('click', function(e) {
             e.preventDefault();
