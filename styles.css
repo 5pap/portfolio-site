@@ -766,6 +766,72 @@ img {
     border-top: 1px solid rgba(255, 255, 255, 0.05);
 }
 
+/* Form success/error message styles */
+.form-errors,
+.form-success,
+.form-error {
+    padding: 1.2rem;
+    margin-bottom: 1.5rem;
+    border-radius: var(--border-radius);
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    animation: slideDown 0.3s ease-out;
+}
+
+.form-errors {
+    background: rgba(255, 82, 82, 0.1);
+    border: 1px solid rgba(255, 82, 82, 0.2);
+    color: #ff5252;
+}
+
+.form-success {
+    background: rgba(40, 167, 69, 0.1);
+    border: 1px solid rgba(40, 167, 69, 0.2);
+    color: #28a745;
+}
+
+.form-error {
+    background: rgba(255, 193, 7, 0.1);
+    border: 1px solid rgba(255, 193, 7, 0.2);
+    color: #ffc107;
+}
+
+.form-icon {
+    font-size: 1.5rem;
+    margin-top: 0.2rem;
+    flex-shrink: 0;
+}
+
+.form-icon.success {
+    color: #28a745;
+}
+
+.form-icon.error {
+    color: #ff5252;
+}
+
+.form-errors ul {
+    margin: 0;
+    padding-left: 1.5rem;
+}
+
+.form-errors li {
+    margin-bottom: 0.5rem;
+    line-height: 1.4;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
 .footer-content {
     display: flex;
     justify-content: space-between;

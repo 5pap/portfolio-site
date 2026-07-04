@@ -26,7 +26,8 @@ document.addEventListener('DOMContentLoaded', function() {
     const progressBar = document.querySelector('.scroll-progress-bar');
     const backToTopButton = document.querySelector('.back-to-top');
 
-    window.addEventListener('scroll', () => {
+    // Throttle scroll event for performance
+    const handleScroll = throttle(() => {
         const windowScroll = document.body.scrollTop || document.documentElement.scrollTop;
         const windowHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
         const scrolled = (windowScroll / windowHeight) * 100;
@@ -38,7 +39,9 @@ document.addEventListener('DOMContentLoaded', function() {
         } else {
             backToTopButton.classList.remove('show');
         }
-    });
+    }, 100);
+
+    window.addEventListener('scroll', handleScroll);
 
     // Back to top button click
     backToTopButton.addEventListener('click', () => {
@@ -72,8 +75,14 @@ document.addEventListener('DOMContentLoaded', function() {
     // Form submission handling
     const contactForm = document.getElementById('contact-form');
     if (contactForm) {
-        contactForm.addEventListener('submit', function(e) {
+        // Initialize form state
+        let isSubmitting = false;
+
+        contactForm.addEventListener('submit', async function(e) {
             e.preventDefault();
+
+            // Prevent multiple submissions
+            if (isSubmitting) return;
 
             // Get form values
             const name = document.getElementById('name').value.trim();
@@ -81,26 +90,233 @@ document.addEventListener('DOMContentLoaded', function() {
             const project = document.getElementById('project').value;
             const message = document.getElementById('message').value.trim();
 
-            // Simple validation
-            if (!name || !email || !project || !message) {
-                alert('Please fill in all fields');
+            // Enhanced validation
+            const validationErrors = [];
+
+            if (!name) {
+                validationErrors.push('Name is required');
+            } else if (name.length < 2) {
+                validationErrors.push('Name must be at least 2 characters');
+            } else if (name.length > 50) {
+                validationErrors.push('Name must be less than 50 characters');
+            }
+
+            if (!email) {
+                validationErrors.push('Email is required');
+            } else if (!isValidEmail(email)) {
+                validationErrors.push('Please enter a valid email address');
+            }
+
+            if (!project) {
+                validationErrors.push('Please select a project type');
+            }
+
+            if (!message) {
+                validationErrors.push('Message is required');
+            } else if (message.length < 10) {
+                validationErrors.push('Message must be at least 10 characters');
+            } else if (message.length > 500) {
+                validationErrors.push('Message must be less than 500 characters');
+            }
+
+            // Show validation errors if any
+            if (validationErrors.length > 0) {
+                showFormErrors(validationErrors);
                 return;
             }
 
-            // In a real application, you would send this data to a server
-            // For now, we'll just show a success message
-            alert(`Thank you, ${name}! I've received your message about a ${project} project. I'll get back to you at ${email} soon!`);
+            // Clear any existing errors
+            clearFormErrors();
 
-            // Reset form
-            contactForm.reset();
+            // Set submitting state
+            isSubmitting = true;
+
+            // Show loading state
+            const submitButton = contactForm.querySelector('button[type="submit"]');
+            const originalButtonText = submitButton.textContent;
+            submitButton.textContent = 'Sending...';
+            submitButton.disabled = true;
+            submitButton.classList.add('sending');
+
+            try {
+                // Prepare form data
+                const formData = new FormData();
+                formData.append('name', name);
+                formData.append('email', email);
+                formData.append('project', project);
+                formData.append('message', message);
+
+                // Send to Formspree
+                const response = await fetch(contactForm.action, {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'Accept': 'application/json'
+                    }
+                });
+
+                if (response.ok) {
+                    // Success! Show integrated success message
+                    showFormSuccess('Thank you! Your message has been sent. I\'ll get back to you soon.');
+                    contactForm.reset();
+                } else {
+                    // Error from server
+                    throw new Error(`Formspree error: ${response.status}`);
+                }
+            } catch (error) {
+                // Show error
+                console.error('Form submission error:', error);
+                showFormError('Oops! There was an error sending your message. Please try again later or email me directly.');
+            } finally {
+                // Reset button state
+                isSubmitting = false;
+                submitButton.textContent = originalButtonText;
+                submitButton.disabled = false;
+                submitButton.classList.remove('sending');
+            }
         });
     }
+
+// Helper function to validate email format
+function isValidEmail(email) {
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailPattern.test(email);
+}
+
+// Helper function to show form errors
+function showFormErrors(errors) {
+    // Clear existing errors first
+    clearFormErrors();
+
+    // Create error container
+    const errorContainer = document.createElement('div');
+    errorContainer.className = 'form-errors';
+    errorContainer.role = 'alert';
+
+    const errorList = document.createElement('ul');
+    errors.forEach(error => {
+        const li = document.createElement('li');
+        li.textContent = error;
+        errorList.appendChild(li);
+    });
+
+    errorContainer.appendChild(errorList);
+
+    // Insert error container before the form
+    const contactForm = document.getElementById('contact-form');
+    contactForm.parentNode.insertBefore(errorContainer, contactForm);
+
+    // Focus on first invalid field
+    const firstInvalidInput = contactForm.querySelector(':invalid');
+    if (firstInvalidInput) {
+        firstInvalidInput.focus();
+    }
+}
+
+// Helper function to show form success message
+function showFormSuccess(message) {
+    // Clear existing messages/errors first
+    clearFormMessages();
+
+    // Create success container
+    const successContainer = document.createElement('div');
+    successContainer.className = 'form-success';
+    successContainer.role = 'status';
+    successContainer.innerHTML = `<span class="form-icon success">✓</span> ${message}`;
+
+    // Insert success container before the form
+    const contactForm = document.getElementById('contact-form');
+    contactForm.parentNode.insertBefore(successContainer, contactForm);
+
+    // Remove success message after 5 seconds
+    setTimeout(() => {
+        if (successContainer.parentNode) {
+            successContainer.remove();
+        }
+    }, 5000);
+}
+
+// Helper function to show form error message
+function showFormError(message) {
+    // Clear existing messages/errors first
+    clearFormMessages();
+
+    // Create error container
+    const errorContainer = document.createElement('div');
+    errorContainer.className = 'form-error';
+    errorContainer.role = 'alert';
+    errorContainer.innerHTML = `<span class="form-icon error">⚠</span> ${message}`;
+
+    // Insert error container before the form
+    const contactForm = document.getElementById('contact-form');
+    contactForm.parentNode.insertBefore(errorContainer, contactForm);
+
+    // Remove error message after 5 seconds
+    setTimeout(() => {
+        if (errorContainer.parentNode) {
+            errorContainer.remove();
+        }
+    }, 5000);
+}
+
+// Helper function to clear form messages
+function clearFormMessages() {
+    const existingMessages = document.querySelectorAll('.form-errors, .form-success, .form-error');
+    existingMessages.forEach(el => el.remove());
+}
+
+// Helper function to clear form errors specifically
+function clearFormErrors() {
+    const existingErrors = document.querySelectorAll('.form-errors');
+    existingErrors.forEach(el => el.remove());
+}
+
+// Performance optimization: throttle function
+function throttle(func, limit) {
+    let inThrottle;
+    return function() {
+        const args = arguments;
+        const context = this;
+        if (!inThrottle) {
+            func.apply(context, args);
+            inThrottle = true;
+            setTimeout(() => inThrottle = false, limit);
+        }
+    }
+}
+
+// Add hover effect to portfolio items for touch devices
+    const portfolioItems = document.querySelectorAll('.portfolio-item');
+    portfolioItems.forEach(item => {
+        item.addEventListener('touchstart', function() {
+            this.classList.add('hover');
+        });
+
+        item.addEventListener('touchend', function() {
+            setTimeout(() => {
+                this.classList.remove('hover');
+            }, 300);
+        });
+    });
+
+    // Add hover effect to service cards
+    const serviceCards = document.querySelectorAll('.service-card');
+    serviceCards.forEach(card => {
+        card.addEventListener('mouseenter', function() {
+            this.classList.add('hover');
+        });
+
+        card.addEventListener('mouseleave', function() {
+            this.classList.remove('hover');
+        });
+    });
 
     // Add active class to nav links on scroll
     const sections = document.querySelectorAll('section[id]');
     const navLinks = document.querySelectorAll('.nav-link');
 
-    window.addEventListener('scroll', () => {
+    // Throttle scroll event for performance
+    const handleNavScroll = throttle(() => {
         let current = '';
 
         sections.forEach(section => {
@@ -118,21 +334,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 link.classList.add('active');
             }
         });
-    });
+    }, 100);
 
-    // Add hover effect to portfolio items for touch devices
-    const portfolioItems = document.querySelectorAll('.portfolio-item');
-    portfolioItems.forEach(item => {
-        item.addEventListener('touchstart', function() {
-            this.classList.add('hover');
-        });
-
-        item.addEventListener('touchend', function() {
-            setTimeout(() => {
-                this.classList.remove('hover');
-            }, 300);
-        });
-    });
+    window.addEventListener('scroll', handleNavScroll);
 });
 
 // Simple animation on scroll
@@ -161,5 +365,5 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Run on load and scroll
     animateOnScroll();
-    window.addEventListener('scroll', animateOnScroll);
+    window.addEventListener('scroll', throttle(animateOnScroll, 100));
 });
