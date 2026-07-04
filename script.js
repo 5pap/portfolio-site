@@ -8,6 +8,10 @@ document.addEventListener('DOMContentLoaded', function() {
     const privacyLink = document.getElementById('privacy-link');
     const termsLink = document.getElementById('terms-link');
 
+    );
+
+
+
     if (privacyLink) {
         privacyLink.addEventListener('click', function(e) {
             e.preventDefault();
@@ -50,10 +54,7 @@ document.addEventListener('DOMContentLoaded', function() {
             behavior: 'smooth'
         });
     });
-    // Set current year in footer
-    document.getElementById('year').textContent = new Date().getFullYear();
 
-    // Mobile menu toggle (if we had one)
     // Smooth scrolling for anchor links
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         anchor.addEventListener('click', function(e) {
@@ -177,6 +178,100 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
+    // Hover effect for portfolio items (touch devices)
+    const portfolioItems = document.querySelectorAll('.portfolio-item');
+    portfolioItems.forEach(item => {
+        item.addEventListener('touchstart', function() {
+            this.classList.add('hover');
+        });
+
+        item.addEventListener('touchend', function() {
+            setTimeout(() => {
+                this.classList.remove('hover');
+            }, 300);
+        });
+    });
+
+    // Hover effect for service cards
+    const serviceCards = document.querySelectorAll('.service-card');
+    serviceCards.forEach(card => {
+        card.addEventListener('mouseenter', function() {
+            this.classList.add('hover');
+        });
+
+        card.addEventListener('mouseleave', function() {
+            this.classList.remove('hover');
+        });
+    });
+
+    // Set current year in footer
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    // ===== ANIMATION =====
+    // Elements to animate
+    const animatedElements = document.querySelectorAll('.service-card, .portfolio-item, .about-text, .about-skills');
+    // Sections and nav links for active nav highlighting
+    const sections = document.querySelectorAll('section[id]');
+    const navLinks = document.querySelectorAll('.nav-link');
+
+    // Initialize animation elements
+    animatedElements.forEach(element => {
+        element.style.opacity = '0';
+        element.style.transform = 'translateY(30px)';
+        element.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+    });
+
+    // Function to check and animate elements in view
+    function animateOnScroll() {
+        animatedElements.forEach(element => {
+            const elementTop = element.getBoundingClientRect().top;
+            const elementBottom = element.getBoundingClientRect().bottom;
+
+            if (elementTop < window.innerHeight && elementBottom > 0) {
+                element.style.opacity = '1';
+                element.style.transform = 'translateY(0)';
+            }
+        });
+    }
+
+    // Function to run animation check (used for immediate load and hashchange)
+    function runAnimationCheck() {
+        animateOnScroll();
+    }
+
+    // Run immediately to handle elements already in view on load
+    runAnimationCheck();
+
+    // Run on hashchange to handle anchor links that might not trigger scroll (if element already in view)
+    window.addEventListener('hashchange', runAnimationCheck);
+
+    // Throttle scroll event for scroll-based animation
+    window.addEventListener('scroll', throttle(animateOnScroll, 100));
+
+    // Add active class to nav links on scroll
+    const handleNavScroll = throttle(() => {
+        let current = '';
+
+        sections.forEach(section => {
+            const sectionTop = section.offsetTop;
+            const sectionHeight = section.offsetHeight;
+
+            if (pageYOffset >= sectionTop - 100) {
+                current = section.getAttribute('id');
+            }
+        });
+
+        navLinks.forEach(link => {
+            link.classList.remove('active');
+            if (link.getAttribute('href').slice(1) === current) {
+                link.classList.add('active');
+            }
+        });
+    }, 100);
+
+    window.addEventListener('scroll', handleNavScroll);
+});
+
 // Helper function to validate email format
 function isValidEmail(email) {
     const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -282,88 +377,5 @@ function throttle(func, limit) {
             inThrottle = true;
             setTimeout(() => inThrottle = false, limit);
         }
-    }
+    };
 }
-
-// Add hover effect to portfolio items for touch devices
-    const portfolioItems = document.querySelectorAll('.portfolio-item');
-    portfolioItems.forEach(item => {
-        item.addEventListener('touchstart', function() {
-            this.classList.add('hover');
-        });
-
-        item.addEventListener('touchend', function() {
-            setTimeout(() => {
-                this.classList.remove('hover');
-            }, 300);
-        });
-    });
-
-    // Add hover effect to service cards
-    const serviceCards = document.querySelectorAll('.service-card');
-    serviceCards.forEach(card => {
-        card.addEventListener('mouseenter', function() {
-            this.classList.add('hover');
-        });
-
-        card.addEventListener('mouseleave', function() {
-            this.classList.remove('hover');
-        });
-    });
-
-    // Add active class to nav links on scroll
-    const sections = document.querySelectorAll('section[id]');
-    const navLinks = document.querySelectorAll('.nav-link');
-
-    // Throttle scroll event for performance
-    const handleNavScroll = throttle(() => {
-        let current = '';
-
-        sections.forEach(section => {
-            const sectionTop = section.offsetTop;
-            const sectionHeight = section.offsetHeight;
-
-            if (pageYOffset >= sectionTop - 100) {
-                current = section.getAttribute('id');
-            }
-        });
-
-        navLinks.forEach(link => {
-            link.classList.remove('active');
-            if (link.getAttribute('href').slice(1) === current) {
-                link.classList.add('active');
-            }
-        });
-    }, 100);
-
-    window.addEventListener('scroll', handleNavScroll);
-});
-
-// Simple animation on scroll
-function animateOnScroll() {
-    const elements = document.querySelectorAll('.service-card, .portfolio-item, .about-text, .about-skills');
-
-    elements.forEach(element => {
-        const elementTop = element.getBoundingClientRect().top;
-        const elementBottom = element.getBoundingClientRect().bottom;
-
-        if (elementTop < window.innerHeight && elementBottom > 0) {
-            element.style.opacity = '1';
-            element.style.transform = 'translateY(0)';
-        }
-    });
-}
-
-// Initialize elements for animation
-document.addEventListener('DOMContentLoaded', function() {
-    const elements = document.querySelectorAll('.service-card, .portfolio-item, .about-text, .about-skills');
-    elements.forEach(element => {
-        element.style.opacity = '0';
-        element.style.transform = 'translateY(30px)';
-        element.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
-    });
-
-    // Run on load and scroll
-    animateOnScroll();
-    window.addEventListener('scroll', throttle(animateOnScroll, 100));
-});

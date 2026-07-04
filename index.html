@@ -185,6 +185,16 @@
                     <h3 class="service-title">Custom Java Applications</h3>
                     <p class="service-text">Build bespoke Java solutions from the ground up with performance as a first-class consideration. Whether it's desktop applications, backend systems, or data processing engines—I architect for speed, scalability, and maintainability from day one.</p>
                 </div>
+                <div class="service-card">
+                    <div class="service-icon">⚙︤</div>
+                    <h3 class="service-title">JVM Tuning & GC Optimization</h3>
+                    <p class="service-text">Expert tuning of JVM parameters, garbage collector selection (G1, ZGC, Shenandoah), and heap sizing to minimize pause times and maximize throughput for latency-sensitive applications.</p>
+                </div>
+                <div class="service-card">
+                    <div class="service-icon">🗄️</div>
+                    <h3 class="service-title">Database Access Optimization</h3>
+                    <p class="service-text">Optimize JDBC queries, Hibernate mappings, connection pooling, and caching strategies to reduce database latency and increase application throughput under heavy load.</p>
+                </div>
             </div>
         </div>
     </section>
@@ -194,19 +204,20 @@
         <div class="container">
             <h2 class="section-title">Optimization-Focused Java Projects</h2>
             <div class="portfolio-grid">
+                <!-- Item 1 -->
                 <div class="portfolio-item">
                     <div class="portfolio-image">
                         <div class="image-placeholder">
                             <div class="placeholder-content">
                                 <div class="placeholder-icon">⚡</div>
-                                <h4>Financial Trading Platform</h4>
-                                <p>Low-latency Java trading engine</p>
+                                <h4>High-Frequency Trading Engine</h4>
+                                <p>Low-latency Java trading system</p>
                             </div>
                         </div>
                     </div>
                     <div class="portfolio-content">
                         <h3 class="portfolio-title">High-Frequency Trading Engine</h3>
-                        <p class="portfolio-text">Built a ultra-low-latency Java trading system processing 50K+ transactions/second with sub-millisecond response times. Optimized garbage collection, used object pools, minimized GC pauses, and implemented lock-free data structures for maximum throughput.</p>
+                        <p class="portfolio-text">Built an ultra-low-latency Java trading system processing 50K+ transactions/second with sub-millisecond response times. Optimized garbage collection, used object pools, minimized GC pauses, and implemented lock-free data structures for maximum throughput.</p>
                         <div class="portfolio-tags">
                             <span class="tag">Java 17</span>
                             <span class="tag">Low-Latency</span>
@@ -216,6 +227,7 @@
                         </div>
                     </div>
                 </div>
+                <!-- Item 2 -->
                 <div class="portfolio-item">
                     <div class="portfolio-image">
                         <div class="image-placeholder">
@@ -238,6 +250,7 @@
                         </div>
                     </div>
                 </div>
+                <!-- Item 3 -->
                 <div class="portfolio-item">
                     <div class="portfolio-image">
                         <div class="image-placeholder">
@@ -260,6 +273,7 @@
                         </div>
                     </div>
                 </div>
+                <!-- Item 4 -->
                 <div class="portfolio-item">
                     <div class="portfolio-image">
                         <div class="image-placeholder">
@@ -282,6 +296,7 @@
                         </div>
                     </div>
                 </div>
+                <!-- Item 5 -->
                 <div class="portfolio-item">
                     <div class="portfolio-image">
                         <div class="image-placeholder">
@@ -304,6 +319,7 @@
                         </div>
                     </div>
                 </div>
+                <!-- Item 6 -->
                 <div class="portfolio-item">
                     <div class="portfolio-image">
                         <div class="image-placeholder">
@@ -322,6 +338,52 @@
                             <span class="tag">REST API</span>
                             <span class="tag">Performance Tuning</span>
                             <span class="tag">Async Processing</span>
+                            <span class="tag">Optimized</span>
+                        </div>
+                    </div>
+                </div>
+                <!-- Item 7 -->
+                <div class="portfolio-item">
+                    <div class="portfolio-image">
+                        <div class="image-placeholder">
+                            <div class="placeholder-content">
+                                <div class="placeholder-icon">📡</div>
+                                <h4>Real-time Streaming Platform</h4>
+                                <p>Apache Kafka based event processing</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="portfolio-content">
+                        <h3 class="portfolio-title">Real-time Streaming Analytics Platform</h3>
+                        <p class="portfolio-text">Built a high-throughput Java-based streaming platform using Apache Kafka and Kafka Streams processing 1M+ events per second with exactly-once semantics. Optimized serializer/deserializer, tuned stream threads, and implemented state store compression resulting in 70% lower latency and 2x throughput.</p>
+                        <div class="portfolio-tags">
+                            <span class="tag">Java 17</span>
+                            <span class="tag">Apache Kafka</span>
+                            <span class="tag">Kafka Streams</span>
+                            <span class="tag">Streaming</span>
+                            <span class="tag">Optimized</span>
+                        </div>
+                    </div>
+                </div>
+                <!-- Item 8 -->
+                <div class="portfolio-item">
+                    <div class="portfolio-image">
+                        <div class="image-placeholder">
+                            <div class="placeholder-content">
+                                <div class="placeholder-icon">🛡️</div>
+                                <h4>API Gateway & Microservice Mesh</h4>
+                                <p>High-performance service-to-service communication</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="portfolio-content">
+                        <h3 class="portfolio-title">Optimized API Gateway for Microservices</h3>
+                        <p class="portfolio-text">Developed a custom API gateway using Netty and Java NIO handling 50K+ RPM with TLS termination, JWT validation, rate limiting, and circuit breaker patterns. Achieved 40% reduction in latency versus off-the-shelf solutions through zero-copy buffers and epoll-based I/O.</p>
+                        <div class="portfolio-tags">
+                            <span class="tag">Java 17</span>
+                            <span class="tag">Netty</span>
+                            <span class="tag">NIO</span>
+                            <span class="tag">API Gateway</span>
                             <span class="tag">Optimized</span>
                         </div>
                     </div>
@@ -353,6 +415,7 @@
                         <option value="optimization">Performance Optimization</option>
                         <option value="refactoring">Code Refactoring & Cleanup</option>
                         <option value="jvm-tuning">JVM & Performance Tuning</option>
+                        <option value="db-opt">Database Access Optimization</option>
                         <option value="other">Other</option>
                     </select>
                 </div>
